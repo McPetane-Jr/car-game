@@ -19,30 +19,36 @@ import random
 
 pygame.init()
 
-#Defining the screen width and height
+#====================Defining the screen width and height
 small_scrn_width, small_scrn_height = 1280 * 0.9, 720 * 0.9
 screen_width, screen_height = small_scrn_width, small_scrn_height
-#
+#====================================================================================
 
+#====================Defining assets for the game===========================================
 bg = pygame.image.load("bg.jpg")
 vehicle = pygame.image.load('images/car/LadyBugCar.png')
 Moving_vehicle = pygame.image.load('images/car/LadyBugCarMoving.png')
 Reversing_vehicle = pygame.image.load('images/car/LadyBugCarReversing.png')
 Shield = scale_image(pygame.image.load('images/props/Shild.png'), 1.5)
-#fuel_icon =pygame.image.load("fuel.gif")
 fuel_icon =pygame.image.load("larvae.png")
+#=====================================================================================
 
+#====================Setting up the screen and clock===========================================
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
 song = pygame.mixer.music.load('Here Comes a Thought - Steven Universe Karaoke [Official Instrumental](MP3_160K).mp3')
 mute = False
+#=======================================================================================
 
 
+#====================Defining the sound effects================================================
 fuel_sound = pygame.mixer.Sound("sound/effects/glassbell.wav")
 
+#=======================================================================================
 
 
+#====================Defining the car class================================================
 class car():
 
     IMG_static = vehicle
@@ -158,8 +164,10 @@ class car():
     def y(self):
         q = self.y
         return self.q
+#================================================================================
 
 
+#====================Defining the Bombs class================================================
 class Bombs(car):
     Explosions = [pygame.image.load('images/props/E00.png'),
                   pygame.image.load('images/props/E11.png'),
@@ -210,12 +218,12 @@ class Bombs(car):
         if self.exp_index >= len(self.Explosions):
             self.bombs.clear()
             self.exp_index = 0
+#========================================================================================
 
 
 
 
-
-
+#====================Defining the food class================================================
 class food():
     icon = fuel_icon
     #icon_mask = pygame.mask.from_surface(icon)
@@ -253,9 +261,10 @@ class food():
 
         return pygame.mask.from_surface(self.icon)
 
+#======================================================================================
 
 
-
+#====================Defining the health class================================================
 class health():
     def __init__(self, x, y, width, height, fuel, max_fuel):
         self.contents = None
@@ -320,7 +329,10 @@ class health():
                 if event.type == pygame.QUIT:
                     exit("Loseeeerrrrr")
 
+#======================================================================================
 
+
+#====================Defining the Game_info class================================================
 #This class will keep track of the wins, losses and levels
 class Game_info:
     levels = 3
@@ -403,16 +415,14 @@ class Enemy:
                 self.vel *= -1
 
     #def bug(self):
+ #============================================================================
         
 
-
+#======================Defining the game objects================================================
 centipedes = Enemy()
 
 duration = True
 game = Game_info()
-
-
-#time = timer.Timer( 3000, repeat = False, autostart = duration)
 
 kar = car(4,20,350)
 bomb = Bombs(4, 20, 350)
@@ -423,8 +433,10 @@ fuel_icon = food(random.randint(5, 1000 - fuel_icon.get_width() - 100),
 
 hp = health(20, 20, 140, 20, 140, 140)
 
+#================================================================
 
 
+#====================Defining the animate function================================================
 def animate():
     screen.blit(bg, (0,0))
     fuel_icon.draw()
@@ -439,7 +451,7 @@ def animate():
 
 
 
-
+#====================Defining the buttons function================================================
 def buttons():
     global mute
     moving = False
@@ -517,7 +529,7 @@ def buttons():
 
 
 
-
+#====================Defining the collision control function================================================
 def collision_cntrl():
 
     if kar.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
@@ -551,7 +563,7 @@ def collision_cntrl():
 
 
 
-
+#====================Defining the main game loop================================================
 start_game = True
 
 
