@@ -4,6 +4,8 @@ import pygame
 import math
 from utils import blit_rotate_center, scale_image
 
+pygame.init()
+
 #=========Vehicle assets===================================================
 vehicle = pygame.image.load('images/car/LadyBugCar.png')
 Moving_vehicle = pygame.image.load('images/car/LadyBugCarMoving.png')

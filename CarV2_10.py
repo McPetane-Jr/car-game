@@ -12,13 +12,13 @@
 #Todo: re-enable powerups
 
 
-import os.path
+
 import math
 import random
 
 
 from car import car, Bombs
-from entities import food, health, Enemy
+from entities import food, health, Enemy, fuel_image
 from game_info import Game_info
 
 import pygame
@@ -47,32 +47,10 @@ pygame.mixer.music.play(-1)  # Play the music indefinitely
 mute = False
 #=======================================================================================
 
-
-#====================Defining the sound effects================================================
-
-
-#=======================================================================================
-
-
-#====================Defining the car class================================================
-
-
-#====================Defining the Bombs class================================================
-
-
-
-
-#====================Defining the food class================================================
-
-#======================================================================================
-
-
-#====================Defining the health class================================================
         
 
 #======================Defining the game objects================================================
-centipedes = Enemy()
-
+centipedes = Enemy(screen_width, screen_height)
 duration = True
 game = Game_info()
 
@@ -80,18 +58,17 @@ kar = car(4,20,350)
 bomb = Bombs(4, 20, 350)
 
 
-fuel_icon = food(random.randint(5, 1000 - self.get_width() - 100),
-                 random.randint(0, 550 - self.get_height() - 50))
+fuel_icon = food(random.randint(5, 1000 - fuel_image.get_width() - 100),
+                 random.randint(0, 550 - fuel_image.get_height() - 50), screen_width, screen_height)
 
-hp = health(20, 20, 140, 20, 140, 140)
+hp = health(20, 20, 140, 20, 140, 140, screen_width, screen_height)
 
-#================================================================
 
 
 #====================Defining the animate function================================================
 def animate():
     screen.blit(bg, (0,0))
-    fuel_icon.draw()
+    fuel_icon.draw(screen)
     kar.draw(screen)
     hp.draw(screen)
     centipedes.draw(screen)
@@ -170,7 +147,7 @@ def buttons():
             hp.fuel -= 0.247
 
     if hp.fuel <= 0:
-        hp.empty()
+        hp.empty(screen)
 
     if keys[pygame.K_m]:
         if not mute:
@@ -188,7 +165,7 @@ def collision_cntrl():
         hp.fuel += 12.5
         game.progress += 1
         hp.score += 1
-        fuel_icon.collided()
+        fuel_icon.collided(screen)
 
 
 
