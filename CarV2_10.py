@@ -1,20 +1,21 @@
-import os.path
+# import os.path
 #from cgitb import small
-from itertools import count
-from math import radians
-from pickle import GLOBAL
+# from itertools import count
+# from math import radians
+# from pickle import GLOBAL
 
-from PIL.ImageChops import offset
+#from PIL.ImageChops import offset
 #from pygame.time import get_ticks
-from urllib3.filepost import writer
+#from urllib3.filepost import writer
 
 #import timer
 from utils import blit_rotate_center, scale_image
+
+
+import os.path
 import pygame
 import math
 import random
-#from PowerUps import *
-#from timer import Timer
 
 
 pygame.init()
@@ -37,7 +38,9 @@ fuel_icon =pygame.image.load("larvae.png")
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
-song = pygame.mixer.music.load('Here Comes a Thought - Steven Universe Karaoke [Official Instrumental](MP3_160K).mp3')
+pygame.mixer.music.load('Here Comes a Thought - Steven Universe Karaoke [Official Instrumental](MP3_160K).mp3')
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.play(-1)  # Play the music indefinitely
 mute = False
 #=======================================================================================
 
