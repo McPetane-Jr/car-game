@@ -15,34 +15,36 @@ from utils import blit_rotate_center, scale_image
 
 pygame.init()
 
-#====================Defining the screen width and height
+#Defining the screen width and height
 
 small_scrn_width, small_scrn_height = 1280 * 0.9, 720 * 0.9
 screen_width, screen_height = small_scrn_width, small_scrn_height
 
-#====================================================================================
 
-#====================Defining assets for the game===========================================
+#BACKGROUND
+
 bg = pygame.image.load("bg.jpg")
 
 
-#=====================================================================================
 
-#====================Setting up the screen and clock===========================================
+#Setting up the screen and clock
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
+
+
+#MUSIC
+
 pygame.mixer.music.load('Here Comes a Thought - Steven Universe Karaoke [Official Instrumental](MP3_160K).mp3')
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)  # Play the music indefinitely
 mute = False
-#=======================================================================================
 
-        
+     
 
-#======================Defining the game objects================================================
+#Defining the game objects
+
 centipedes = Enemy(screen_width, screen_height)
-duration = True
 game = Game_info()
 
 kar = car(14,20,350)
