@@ -16,8 +16,10 @@ from utils import blit_rotate_center, scale_image
 pygame.init()
 
 #====================Defining the screen width and height
+
 small_scrn_width, small_scrn_height = 1280 * 0.9, 720 * 0.9
 screen_width, screen_height = small_scrn_width, small_scrn_height
+
 #====================================================================================
 
 #====================Defining assets for the game===========================================
