@@ -44,7 +44,7 @@ class car():
 
 
 
-    def rotation(self, left = False, right = True):
+    def rotation(self, left=False, right=True):
         if left:
             self.angle += self.rotation_vel
         elif right:
@@ -53,29 +53,33 @@ class car():
     def draw(self, screen):
         if self.moving_fwd:
             blit_rotate_center(screen, self.img, (self.x, self.y), self.angle)
-        if self.moving_bwd:
+        elif self.moving_bwd:
             blit_rotate_center(screen, self.img_reversing, (self.x, self.y), self.angle)
-        if not self.moving_bwd or self.moving_fwd:
+        else:
             blit_rotate_center(screen, self.img_static, (self.x, self.y), self.angle)
 
         if self.shield_active:
             screen.blit(Shield, (self.x, self.y))
 
-        #print(self.x)
-
-
+    
 
 
 
     def move_fwd(self):
 
-        self.vel = min((self.vel + self.acceleration), self.max_vel)#this makes sue we can't keep accelerating after reaching max vel
+        self.vel = min((self.vel + self.acceleration), self.max_vel)
+        #this makes sue we can't keep accelerating after reaching max vel
+        
+        
         self.move1()
 
     def reverse(self):
 
         self.vel = max((self.vel - self.acceleration),
-                       -self.max_vel/2)  # this makes sue we can't keep accelerating after reaching max vel
+                       -self.max_vel/2)  
+        # this makes sue we can't keep accelerating after reaching max vel
+        
+        
         self.move1()
 
     def move1(self):
@@ -110,13 +114,6 @@ class car():
         offset = (int(self.x - x), int(self.y - y))
         return mask.overlap(car_mask, offset)
     
-    
-    def x(self):
-        p = self.x
-        pass
-    def y(self):
-        q = self.y
-        return self.q
 #================================================================================
 
 
@@ -171,56 +168,3 @@ class Bombs(car):
             self.bombs.clear()
             self.exp_index = 0
 #========================================================================================
-# import pygame
-# import math
-# from utils import blit_rotate_center, scale_image
-
-# pygame.init()
-
-vehicle = pygame.image.load('images/car/LadyBugCar.png')
-Moving_vehicle = pygame.image.load('images/car/LadyBugCarMoving.png')
-Reversing_vehicle = pygame.image.load('images/car/LadyBugCarReversing.png')
-Shield = scale_image(pygame.image.load('images/props/Shild.png'), 1.5)
-
-
-class car():
-    IMG_static = vehicle
-    IMG_fwd = Moving_vehicle
-    IMG_bwd = Reversing_vehicle
-
-    
-    def rotation(self, left=False, right=True):
-        if left:
-            self.angle += self.rotation_vel
-        elif right:
-            self.angle -= self.rotation_vel
-
-    def draw(self, screen):
-        if self.moving_fwd:
-            blit_rotate_center(screen, self.img, (self.x, self.y), self.angle)
-        elif self.moving_bwd:
-            blit_rotate_center(screen, self.img_reversing, (self.x, self.y), self.angle)
-        else:
-            blit_rotate_center(screen, self.img_static, (self.x, self.y), self.angle)
-
-        if self.shield_active:
-            screen.blit(Shield, (self.x, self.y))
-
-    def move_fwd(self):
-        self.vel = min(self.vel + self.acceleration, self.max_vel)
-        self.move1()
-
-    def reverse(self):
-        self.vel = max(self.vel - self.acceleration, -self.max_vel / 2)
-        self.move1()
-
-    def move1(self):
-        rad = math.radians(self.angle)
-        self.y -= math.cos(rad) * self.vel
-        self.x -= math.sin(rad) * self.vel
-
-    def slow_down(self):
-        self.vel = max(self.vel - self.acceleration * 0.8, 0)
-        self.move1()
-
-    
