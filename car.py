@@ -110,33 +110,7 @@ class car():
         offset = (int(self.x - x), int(self.y - y))
         return mask.overlap(car_mask, offset)
     
-    # def hit(self, mask, x, y):
-
-    #     if self.moving_fwd:
-    #         car_mask = pygame.mask.from_surface(self.IMG_fwd)
-    #         offset = (int(self.x - x), int(self.y - y))
-    #         poi = mask.overlap(car_mask , offset)
-
-    #         return poi
-
-    #     if self.moving_bwd:
-    #         car_mask = pygame.mask.from_surface(self.IMG_bwd)
-    #         offset = (int(self.x - x), int(self.y - y))
-    #         poi = mask.overlap(car_mask , offset)
-    #         return poi
-
-    #     if not self.moving_bwd or self.moving_bwd:
-    #         car_mask = pygame.mask.from_surface(self.IMG_static)
-    #         offset = (int(self.x - x), int(self.y - y))
-    #         poi = mask.overlap(car_mask , offset)
-    #         return poi
-
-    #     if self.moving_fwd:
-    #         car_mask = pygame.mask.from_surface(self.IMG_fwd)
-    #         offset = (int(self.x - x), int(self.y - y))
-    #         bad_poi = mask.overlap(car_mask, offset)
-    #         return bad_poi
-
+    
     def x(self):
         p = self.x
         pass
