@@ -126,7 +126,7 @@ class Bombs(car):
     ]
 
     Bomb = pygame.image.load('images/props/Bomb.png')
-    
+
     def __init__(self, rotation_vel, x, y):
         super().__init__(rotation_vel, x, y)
 
@@ -134,39 +134,47 @@ class Bombs(car):
         self.F_down = False
         self.exploded = False
         self.solid = True
-        self.speed = 0.005
+        self.speed = 0.5
         self.exp_index = 0
         self.count = 0
 
     def detonate(self):
-        if not self.F_down:
-            if len(self.bombs) < 1:
-                self.bombs.append((self.x, self.y))
-                self.F_down = True
-                self.count+=1
-                self.solid = True
-                self.exploded = False
+    
+        if not self.F_down and len(self.bombs) < 1:
+            self.bombs.append((self.x, self.y))
+            self.F_down = True
+            self.count += 1
+            self.solid = True
+            self.exploded = False
 
+    def _reset(self): # One single place that handles all cleanup
+        self.exploded = False
+        self.count = 0
+        self.exp_index = 0
+        self.bombs.clear()
 
     def draw(self, screen):
+        
+        if not self.bombs:   # "if the bombs list is empty exit func/methd"
+            return
+        
         self.explode()
+
         for bomb_x, bomb_y in self.bombs:
             if self.solid and not self.exploded:
                 screen.blit(self.Bomb, (bomb_x, bomb_y))
-            elif self.exploded and self.exp_index <= len(self.Explosions):
+
+            elif self.exploded:
                 current = int(self.exp_index)
-                screen.blit(self.Explosions[current], (bomb_x, bomb_y))
+                if current < len(self.Explosions):   # fixed: was <=
+                    screen.blit(self.Explosions[current], (bomb_x, bomb_y))
 
-            if not self.solid and self.exploded:
-
-                self.exploded = False
-                self.count = 0
-                self.bombs.clear()
+        # Cleanup happens AFTER the loop, never inside it
+        if not self.solid and self.exploded and int(self.exp_index) >= len(self.Explosions):
+            self._reset()
 
 
     def explode(self):
-        self.exp_index += self.speed
-        if self.exp_index >= len(self.Explosions):
-            self.bombs.clear()
-            self.exp_index = 0
+        if self.exploded:
+            self.exp_index += self.speed
 #========================================================================================
