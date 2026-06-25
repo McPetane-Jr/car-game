@@ -93,7 +93,7 @@ def buttons():
 
     if keys[pygame.K_SPACE]:
         cyberBug.max_vel = 20
-        cyberBug.rotation_vel = 11.5
+        cyberBug.rotation_vel = 10
         cyberBug.acceleration = 2
         bomb.x, bomb.y = cyberBug.x, cyberBug.y
     else:
@@ -152,7 +152,7 @@ def collision_cntrl():
         hp.fuel += 12.5
         game.progress += 1
         hp.score += 1
-        fuel_icon.collided(screen)
+        fuel_icon.collided()
         #print("yay")
 
     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
@@ -188,8 +188,8 @@ while start_game:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exit("Bitch, I didn't want you playin' me anyway! \n HOO")
-            
+            exit("I didn't want you playin' me anyway!")
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_m:        # fixed: event-based, fires once per press
                 mute = not mute
@@ -197,14 +197,8 @@ while start_game:
                     pygame.mixer.music.pause()
                 else:
                     pygame.mixer.music.unpause()
+
     keys = pygame.key.get_pressed()
-
-
-    if not mute:
-        pygame.mixer.music.play(-1)
-
-    else:
-        pygame.mixer.stop()
 
 
     buttons()
@@ -212,8 +206,7 @@ while start_game:
     hp.save_score()
 
 
-    if game.progress//5  == game.lvl:
-
+    if game.progress//5  == game.lvl and game.progress > 0:
         game.next_lvl()
         centipedes.vel += game.lvl
 
@@ -221,7 +214,6 @@ while start_game:
         centipedes.enemies_available = True
 
 
-    screen.fill('black')
     animate()
 
 

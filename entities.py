@@ -11,7 +11,8 @@ fuel_sound = pygame.mixer.Sound("sound/effects/glassbell.wav")
 
 class food():
     icon = fuel_image
-    #icon_mask = pygame.mask.from_surface(icon)
+    icon_mask = pygame.mask.from_surface(icon)
+
     def __init__(self, x, y, screen_width, screen_height):
         self.x = x
         self.y = y
@@ -20,27 +21,28 @@ class food():
         self.width = self.icon.get_width()
         self.height = self.icon.get_height()
 
+        self.font = pygame.font.SysFont('elephant', 24, True, False)
+        self.text = self.font.render("+Fuel", 1, 'green')
+        self.show_fuel_text_until = 0  # 0 means "don't show
+
     def draw(self, screen):
         screen.blit(self.icon, (self.x, self.y, self.width, self.height))
         #pygame.draw.rect(screen, 'green', self.hitbox, 2)
 
-    def collided(self, screen):
+        if pygame.time.get_ticks() < self.show_fuel_text_until:
+            
+            
+            screen.blit(self.text, (
+                (self.scrn_width // 2) - (self.text.get_width() // 2),
+                self.scrn_height // 2
+            ))
+
+    def collided(self):
         self.x = random.randint(0,(int(self.scrn_width) - 9 - self.width))
         self.y = random.randint(0,(int(self.scrn_height-9 - self.height)))
         pygame.mixer.Sound.play(fuel_sound)
 
-        font = pygame.font.SysFont('elephant',24, True, False)
-        text = font.render("+Fuel", 1,'green')
-        screen.blit(text, ((self.scrn_width // 2) - (text.get_width() // 2), (720 * 0.9) / 2))
-
-        pygame.display.update()
-        i=0
-        while i < 300000:
-            i+=1
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    i = 301
-                    pygame.quit()
+        self.show_fuel_text_until = pygame.time.get_ticks() + 1000  # show for 1 second
 
 
 
