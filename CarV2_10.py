@@ -46,23 +46,20 @@ mute = False
 
 centipedes = Enemy(screen_width, screen_height)
 game = Game_info()
-
-kar = car(14,20,350)
+cyberBug = car(14,20,350)
 bomb = Bombs(4, 20, 350)
-
-
 fuel_icon = food(random.randint(5, 1000 - fuel_image.get_width() - 100),
                  random.randint(0, 550 - fuel_image.get_height() - 50), screen_width, screen_height)
-
 hp = health(20, 20, 140, 20, 140, 140, screen_width, screen_height)
 
 
 
-#====================Defining the animate function================================================
+#Defining the animate function:
+
 def animate():
     screen.blit(bg, (0,0))
     fuel_icon.draw(screen)
-    kar.draw(screen)
+    cyberBug.draw(screen)
     hp.draw(screen)
     centipedes.draw(screen)
     #game.power_up(screen)
@@ -73,13 +70,14 @@ def animate():
 
 
 
-#====================Defining the buttons function================================================
+#Defining the buttons function:
+
 def buttons():
-    global mute
+    
     moving = False
-    # reversing = False
+
     if keys[pygame.K_v]:
-        kar.shield_active = True
+        cyberBug.shield_active = True     # V-> shield
 
     if keys[pygame.K_f]:
         bomb.detonate()
@@ -94,45 +92,45 @@ def buttons():
 
 
     if keys[pygame.K_SPACE]:
-        kar.max_vel = 15
-        kar.rotation_vel = 8
-        kar.acceleration = 2
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.max_vel = 20
+        cyberBug.rotation_vel = 11.5
+        cyberBug.acceleration = 2
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
     else:
-        kar.max_vel = 8
-        kar.rotation_vel = 4
-        kar.acceleration = 0.2
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.max_vel = 8
+        cyberBug.rotation_vel = 4
+        cyberBug.acceleration = 0.2
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     if keys[pygame.K_w] and hp.fuel > 0:
-        kar.moving_fwd = True
+        cyberBug.moving_fwd = True
         moving = True
-        kar.move_fwd()
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.move_fwd()
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     if keys[pygame.K_s]:
-        kar.moving_bwd = True
+        cyberBug.moving_bwd = True
         moving = True
-        kar.reverse()
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.reverse()
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     #if keys[pygame.K_d]:
     if keys[pygame.K_RIGHT]:
-        kar.rotation(right=True)
-        kar.rotation(left=False)
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.rotation(right=True)
+        cyberBug.rotation(left=False)
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     #if keys[pygame.K_a]:
     if keys[pygame.K_LEFT]:
-        kar.rotation(right=False)
-        kar.rotation(left=True)
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.rotation(right=False)
+        cyberBug.rotation(left=True)
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     if not moving:
-        kar.moving_fwd = False
-        kar.moving_bwd = False
-        kar.slow_down()
-        bomb.x, bomb.y = kar.x, kar.y
+        cyberBug.moving_fwd = False
+        cyberBug.moving_bwd = False
+        cyberBug.slow_down()
+        bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     if moving:
 
@@ -142,11 +140,7 @@ def buttons():
     if hp.fuel <= 0:
         hp.empty(screen)
 
-    if keys[pygame.K_m]:
-        if not mute:
-            mute = True
-        else:
-            mute = False
+    
 
 
 
@@ -154,7 +148,7 @@ def buttons():
 #====================Defining the collision control function================================================
 def collision_cntrl():
 
-    if kar.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
+    if cyberBug.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
         hp.fuel += 12.5
         game.progress += 1
         hp.score += 1
@@ -165,22 +159,22 @@ def collision_cntrl():
 
         print("yay")
 
-    if kar.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
+    if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
         hp.fuel -= 2.125
-        rad = math.radians(kar.angle)
-        kar.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+        rad = math.radians(cyberBug.angle)
+        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
         print("it worked")
 
-    if kar.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
+    if cyberBug.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
         hp.fuel -= 2.125
-        rad = math.radians(kar.angle)
-        kar.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+        rad = math.radians(cyberBug.angle)
+        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
         print("it worked")
 
-    if kar.hit(centipedes.enemy_mask(), centipedes.x2, centipedes.y) is not None:
+    if cyberBug.hit(centipedes.enemy_mask(), centipedes.x2, centipedes.y) is not None:
         hp.fuel -= 2.125
-        rad = math.radians(kar.angle)
-        kar.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+        rad = math.radians(cyberBug.angle)
+        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
         print("it worked")
 
 
