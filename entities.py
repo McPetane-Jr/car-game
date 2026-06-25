@@ -115,7 +115,7 @@ class health():
         
     def empty(self, screen):
         font1 = pygame.font.SysFont('elephant', 30, True, True)
-        text = font1.render("NO FUEL YOU ARE LOSSSSSSEEEE!!!1", 1, 'red')
+        text = font1.render("NO FUEL YOU ARE LOSSSSSSEEEE!!!", 1, 'red')
         screen.blit(text, ((self.scrn_width // 2) - (text.get_width() // 2), (720 * 0.9) / 2))
         pygame.display.update()
         
@@ -126,64 +126,70 @@ class health():
 
 
 class Enemy:
-    img = pygame.image.load('bug.png')
+    
     enemies = [pygame.image.load('bug.png')]
-    enemies_l = [pygame.transform.flip(img,False, True)]
+    enemies_l = [pygame.transform.flip(enemies[0], False, True)]
+    enemy_mask_fwd = pygame.mask.from_surface(enemies[0])  # pre-computed
+    enemy_mask_bwd = pygame.mask.from_surface(enemies_l[0])
     bugs = []
 
     def __init__(self, screen_width, screen_height):
 
 
         self.enemies_available = False
-        self.screen_width = screen_width
-        self.x = random.randint(0,int(screen_width-67))
+
+        self.scrn_width = screen_width
+        self.scrn_height = screen_height
+
+        self.x = random.randint(0, int(screen_width - 67))
         self.x2 = random.randint(0, int(screen_width - 67))
         self.y = -300
         self.vel = 5
         self.difficulty = 0
         self.facing = 1
-        self.scrn_width = screen_width
-        self.scrn_height = screen_height
+        
 
     def draw(self, screen):
-        if self.enemies_available:
-            if self.vel > 0:
 
-                self.move_down()
+        if not self.enemies_available:
+            return 
+        
+    
+        if self.vel > 0:
+
+            self.move_down()
 
 
-                screen.blit(self.enemies[0],( self.x, self.y))
-                screen.blit(self.enemies[0], (self.x2, self.y))
-                screen.blit(self.enemies[0], (abs(self.x2 -self.x), self.y))
+            screen.blit(self.enemies[0],( self.x, self.y))
+            screen.blit(self.enemies[0], (self.x2, self.y))
+            screen.blit(self.enemies[0], (abs(self.x2 -self.x), self.y))
 
-            if screen.get_height() < self.y < screen.get_height()+20:
-                self.x = random.randint(0, int(self.screen_width - 67))
+        if self.scrn_height < self.y < self.scrn_height + 20:  # fixed
+            self.x = random.randint(0, int(self.scrn_width - 67))
 
-            if self.vel <= 0:
-                self.move_up()
-                screen.blit(self.enemies_l[0], (self.x, self.y))
-                screen.blit(self.enemies_l[0], (self.x2, self.y))
-                screen.blit(self.enemies_l[0], (abs(self.x2 - self.x), self.y))
+        if self.vel <= 0:
+            self.move_up()
+            screen.blit(self.enemies_l[0], (self.x, self.y))
+            screen.blit(self.enemies_l[0], (self.x2, self.y))
+            screen.blit(self.enemies_l[0], (abs(self.x2 - self.x), self.y))
 
     def enemy_mask(self):
         if self.vel > 0:
-            return pygame.mask.from_surface(self.enemies[0])
+            return self.enemy_mask_fwd  # pre-computed, no rebuild
         else:
-            return pygame.mask.from_surface(self.enemies_l[0])
+            return self.enemy_mask_bwd
 
     def move_down(self):
-            #self.facing = 1
-            if  self.y < self.scrn_height+310:
-                self.y += self.vel
-            else:
-                self.vel *= -1
+        if self.y < self.scrn_height + 310:
+            self.y += self.vel
+        else:
+            self.vel *= -1
+
     def move_up(self):
-
-            if self.y > -300:
-
-                self.y += self.vel
-            else:
-                self.vel *= -1
+        if self.y > -300:
+            self.y += self.vel
+        else:
+            self.vel *= -1
 
     #def bug(self):
  #============================================================================
