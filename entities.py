@@ -48,10 +48,16 @@ class food():
 
     def col(self):
 
-        return pygame.mask.from_surface(self.icon)
+        return self.icon_mask
 
 
 class health():
+    # Fonts pre-created once at class level
+    font_fuel = pygame.font.SysFont('elephant', 20)
+    font_score = pygame.font.SysFont('elephant', 20)
+    font_hs = pygame.font.SysFont('times new roman', 15)
+    font_empty = pygame.font.SysFont('elephant', 30, True, True)
+
     def __init__(self, x, y, width, height, fuel, max_fuel, screen_width, screen_height):
         self.contents = None
         self.x = x
@@ -84,39 +90,35 @@ class health():
 
         pygame.draw.rect(screen, 'red', (20, 20, 140, 20))
         pygame.draw.rect(screen, "green", (20, 20, self.fuel * (self.fuel/self.max_fuel), 20))
-        if (self.fuel/self.max_fuel)*100 > 30:
-            font = pygame.font.SysFont('elephant', 20)
-            text = font.render(f"fuel tank: {round((self.fuel/self.max_fuel)*100, 2)} %", 1, 'green')
-            screen.blit(text, (20, int(self.scrn_height-40)))
-        else:
-            font_low = pygame.font.SysFont('elephant', 20)
-            text = font_low.render(f"fuel tank: {round((self.fuel / self.max_fuel) * 100, 2)} % !!!", 1, 'red')
-            screen.blit(text, (20, int(self.scrn_height - 40)))
+
+        fuel_pct = (self.fuel / self.max_fuel) * 100
+        color = 'green' if fuel_pct > 30 else 'red'
+        suffix = '' if fuel_pct > 30 else ' !!!'
+        text = self.font_fuel.render(
+            f"fuel tank: {round(fuel_pct, 2)} %{suffix}", 1, color)
+        screen.blit(text, (20, int(self.scrn_height - 40)))
 
 
 
-        font_score = pygame.font.SysFont('elephant', 20)
-        text = font_score.render(f"Score: {self.score} ", 1, 'green')
-        screen.blit(text, (int(self.scrn_width - 60)- text.get_width()/2, 40))
+        text_score = self.font_score.render(f"Score: {self.score}", 1, 'green')
+        screen.blit(text_score,
+                    (int(self.scrn_width - 60) - text_score.get_width() / 2, 40))
 
-        font_HighScore = pygame.font.SysFont('times new roman', 15)
-        text_HighScore = font_HighScore.render(f"High Score: {self.contents} ", 1, 'white')
-        screen.blit(text_HighScore, (int(self.scrn_width - 60) - text_HighScore.get_width() / 2, text.get_height() +50))
+        text_hs = self.font_hs.render(f"High Score: {self.contents}", 1, 'white')
+        screen.blit(text_hs, (
+            int(self.scrn_width - 60) - text_hs.get_width() / 2,
+            text_score.get_height() + 50
+        ))
 
-        #
+
+
+        
     def empty(self, screen):
         font1 = pygame.font.SysFont('elephant', 30, True, True)
         text = font1.render("NO FUEL YOU ARE LOSSSSSSEEEE!!!1", 1, 'red')
         screen.blit(text, ((self.scrn_width // 2) - (text.get_width() // 2), (720 * 0.9) / 2))
         pygame.display.update()
-        i = 0
-        while i < 20000000:
-            i += 1
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    exit("Better luck next time!!!!")
-                if event.type == pygame.QUIT:
-                    exit("Loseeeerrrrr")
+        
 
 #======================================================================================
 
