@@ -131,9 +131,9 @@ class Enemy:
     enemies_l = [pygame.transform.flip(enemies[0], False, True)]
     enemy_mask_fwd = pygame.mask.from_surface(enemies[0])  # pre-computed
     enemy_mask_bwd = pygame.mask.from_surface(enemies_l[0])
-    bugs = []
+    
 
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, current_lvl):
 
 
         self.enemies_available = False
@@ -141,13 +141,29 @@ class Enemy:
         self.scrn_width = screen_width
         self.scrn_height = screen_height
 
-        self.x = random.randint(0, int(screen_width - 67))
-        self.x2 = random.randint(0, int(screen_width - 67))
-        self.y = -300
-        self.vel = 5
+        self.new_lvl = current_lvl
+
+        # Each bug is now independent
+        self.bugs = [self.new_bug(offset=i * 150) for i in range(8)]
         self.difficulty = 0
-        self.facing = 1
+
         
+        
+    def new_bug(self, offset=0):
+        # Creates one bug with randomised properties
+        return {
+            'x': random.randint(0, int(self.scrn_width - 67)),
+            'y': -random.randint(50, 400) - offset,  # staggered start heights
+            'vel': random.uniform(3.5, 6.5),          # each bug slightly different speed
+            'drift': random.uniform(-0.4, 0.4),       # slow horizontal wobble
+        }
+    
+    def level_up(self, new_lvl):
+        self.level = new_lvl
+        for bug in self.bugs:
+            # Give existing bugs a speed bump too
+            direction = 1 if bug['vel'] > 0 else -1
+            bug['vel'] = direction * (random.uniform(3.5, 6.5) + self.level)
 
     def draw(self, screen):
 
@@ -155,41 +171,34 @@ class Enemy:
             return 
         
     
-        if self.vel > 0:
+        for bug in self.bugs:
+            self.move_bug(bug)
 
-            self.move_down()
+            img = self.enemies[0] if bug['vel'] > 0 else self.enemies_l[0]
+            screen.blit(img, (bug['x'], bug['y']))
 
+    def move_bug(self, bug):
+        bug['y'] += bug['vel']
+        bug['x'] += bug['drift']
 
-            screen.blit(self.enemies[0],( self.x, self.y))
-            screen.blit(self.enemies[0], (self.x2, self.y))
-            screen.blit(self.enemies[0], (abs(self.x2 -self.x), self.y))
+        if bug['x'] <= 0 or bug['x'] >= self.scrn_width - 67:
+            bug['drift'] *= -1
 
-        if self.scrn_height < self.y < self.scrn_height + 20:  # fixed
-            self.x = random.randint(0, int(self.scrn_width - 67))
+        if bug['vel'] > 0 and bug['y'] > self.scrn_height + random.randint(30, 120):
+            # random flip point breaks phase convergence
+            bug['vel'] = -(random.uniform(3.5, 6.5) + self.level)  # level bonus added ✅
+            bug['drift'] = random.uniform(-0.4, 0.4)
 
-        if self.vel <= 0:
-            self.move_up()
-            screen.blit(self.enemies_l[0], (self.x, self.y))
-            screen.blit(self.enemies_l[0], (self.x2, self.y))
-            screen.blit(self.enemies_l[0], (abs(self.x2 - self.x), self.y))
+        if bug['vel'] < 0 and bug['y'] < -random.randint(200, 500):
+            # random re-entry point breaks phase convergence
+            bug['vel'] = random.uniform(3.5, 6.5) + self.level     # level bonus added ✅
+            bug['x'] = random.randint(0, int(self.scrn_width - 67))
+            bug['drift'] = random.uniform(-0.4, 0.4)
 
     def enemy_mask(self):
-        if self.vel > 0:
-            return self.enemy_mask_fwd  # pre-computed, no rebuild
-        else:
-            return self.enemy_mask_bwd
-
-    def move_down(self):
-        if self.y < self.scrn_height + 310:
-            self.y += self.vel
-        else:
-            self.vel *= -1
-
-    def move_up(self):
-        if self.y > -300:
-            self.y += self.vel
-        else:
-            self.vel *= -1
+        if any(b['vel'] > 0 for b in self.bugs):
+            return self.enemy_mask_fwd
+        return self.enemy_mask_bwd
 
     #def bug(self):
  #============================================================================

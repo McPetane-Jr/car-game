@@ -43,9 +43,9 @@ mute = False
      
 
 #Defining the game objects
-
-centipedes = Enemy(screen_width, screen_height)
 game = Game_info()
+centipedes = Enemy(screen_width, screen_height, game.lvl)
+
 cyberBug = car(14,20,350)
 bomb = Bombs(4, 20, 350)
 fuel_icon = food(random.randint(5, 1000 - fuel_image.get_width() - 100),
@@ -146,34 +146,45 @@ def buttons():
 
 
 #====================Defining the collision control function================================================
-def collision_cntrl():
+# def collision_cntrl():
 
+#     if cyberBug.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
+#         hp.fuel += 12.5
+#         game.progress += 1
+#         hp.score += 1
+#         fuel_icon.collided()
+#         #print("yay")
+
+#     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
+#         hp.fuel -= 2.125
+#         rad = math.radians(cyberBug.angle)
+#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+#         #print("it worked")
+
+#     if cyberBug.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
+#         hp.fuel -= 2.125
+#         rad = math.radians(cyberBug.angle)
+#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+#         print("it worked")
+
+#     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x2, centipedes.y) is not None:
+#         hp.fuel -= 2.125
+#         rad = math.radians(cyberBug.angle)
+#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
+#         print("it worked")
+
+def collision_cntrl():
     if cyberBug.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
         hp.fuel += 12.5
         game.progress += 1
         hp.score += 1
         fuel_icon.collided()
-        #print("yay")
 
-    if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
-        hp.fuel -= 2.125
-        rad = math.radians(cyberBug.angle)
-        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-        #print("it worked")
-
-    if cyberBug.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
-        hp.fuel -= 2.125
-        rad = math.radians(cyberBug.angle)
-        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-        print("it worked")
-
-    if cyberBug.hit(centipedes.enemy_mask(), centipedes.x2, centipedes.y) is not None:
-        hp.fuel -= 2.125
-        rad = math.radians(cyberBug.angle)
-        cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-        print("it worked")
-
-
+    for bug in centipedes.bugs:
+        if cyberBug.hit(centipedes.enemy_mask(), bug['x'], bug['y']) is not None:
+            hp.fuel -= 2.125
+            rad = math.radians(cyberBug.angle)
+            cyberBug.vel = -(((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** 0.5)
 
 #====================Defining the main game loop================================================
 start_game = True
@@ -208,7 +219,7 @@ while start_game:
 
     if game.progress//5  == game.lvl and game.progress > 0:
         game.next_lvl()
-        centipedes.vel += game.lvl
+        centipedes.level_up(game.lvl)
 
     if game.lvl > 1:
         centipedes.enemies_available = True
