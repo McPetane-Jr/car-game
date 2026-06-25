@@ -153,17 +153,13 @@ def collision_cntrl():
         game.progress += 1
         hp.score += 1
         fuel_icon.collided(screen)
-
-
-
-
-        print("yay")
+        #print("yay")
 
     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
         hp.fuel -= 2.125
         rad = math.radians(cyberBug.angle)
         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-        print("it worked")
+        #print("it worked")
 
     if cyberBug.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
         hp.fuel -= 2.125
@@ -193,7 +189,14 @@ while start_game:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit("Bitch, I didn't want you playin' me anyway! \n HOO")
-
+            
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m:        # fixed: event-based, fires once per press
+                mute = not mute
+                if mute:
+                    pygame.mixer.music.pause()
+                else:
+                    pygame.mixer.music.unpause()
     keys = pygame.key.get_pressed()
 
 
