@@ -19,22 +19,35 @@ class car():
     IMG_fwd = Moving_vehicle
     IMG_bwd = Reversing_vehicle
 
-    def __init__(self, rotation_vel, x, y):
+    def __init__(self, rotation_vel, x, y, screen_width, screen_height):
+
+        #IMAGE DEFINITION:
         self.img_static = self.IMG_static
         self.img = self.IMG_fwd
         self.img_reversing = self.IMG_bwd
+
+        #DIMENSIONS:
+        self.scrn_width = screen_width
+        self.scrn_height = screen_height
+        self.car_w = self.IMG_static.get_width()
+        self.car_h = self.IMG_static.get_height()
+
+        #velocity:
         self.vel = 0
-        self.max_vel = 8          # fixed: was 800
+        self.max_vel = 8
         self.rotation_vel = rotation_vel
+
+        #POSITION:
         self.angle = 0
         self.acceleration = 0.2   # fixed: was 2
         self.x = x
         self.y = y
+
+        #Booleans:
         self.moving_fwd = False
         self.moving_bwd = False
         self.bomb_drop = False
-        self.x_pos = self.x
-        self.y_pos = self.y
+        
         self.shield_active = False
 
         # Pre-computed masks — faster than rebuilding every frame
@@ -42,7 +55,18 @@ class car():
         self.mask_bwd = pygame.mask.from_surface(self.IMG_bwd)
         self.mask_static = pygame.mask.from_surface(self.IMG_static)
 
+    def wrap(self):
+        w, h = self.car_w, self.car_h
 
+        if self.x > self.scrn_width + w * 0.5:
+            self.x = -w * 0.5          # exit right → enter left
+        elif self.x < -w * 1.5:
+            self.x = self.scrn_width - w * 0.5  # exit left → enter right
+
+        if self.y > self.scrn_height + h * 0.5:
+            self.y = -h * 0.5          # exit bottom → enter top
+        elif self.y < -h * 1.5:
+            self.y = self.scrn_height - h * 0.5  # exit top → enter bottom
 
     def rotation(self, left=False, right=True):
         if left:
@@ -90,6 +114,9 @@ class car():
         self.y -= fwd
         self.x -= horizontal
 
+        self.wrap()  # check boundary every time car moves
+
+
 
     def move2(self):
         rad = math.radians(self.angle)
@@ -100,8 +127,11 @@ class car():
         self.x -= horizontal
 
     def slow_down(self):
-        self.vel = max(self.vel-self.acceleration*0.8, 0) #makes so we reduce the velocity till we get to 0
-        self.move1()#Let's go call the bad boi out in the loop
+        if self.vel > 0:
+            self.vel = max(self.vel - self.acceleration * 0.8, 0)
+        elif self.vel < 0:
+            self.vel = min(self.vel + self.acceleration * 0.8, 0)  # decelerates back to 0
+        self.move1()
     
     def hit(self, mask, x, y):
         if self.moving_fwd:
@@ -127,8 +157,8 @@ class Bombs(car):
 
     Bomb = pygame.image.load('images/props/Bomb.png')
 
-    def __init__(self, rotation_vel, x, y):
-        super().__init__(rotation_vel, x, y)
+    def __init__(self, rotation_vel, x, y, screen_width, screen_height):
+        super().__init__(rotation_vel, x, y, screen_width, screen_height)
 
         self.bombs = []
         self.F_down = False

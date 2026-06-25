@@ -201,4 +201,8 @@ class Enemy:
         return self.enemy_mask_bwd
 
     #def bug(self):
+
+    def get_bug_mask(self, bug):
+        # correct mask based on THIS bug's direction
+        return self.enemy_mask_fwd if bug['vel'] > 0 else self.enemy_mask_bwd
  #============================================================================

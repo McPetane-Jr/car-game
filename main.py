@@ -2,6 +2,7 @@
 
 
 
+
 import math
 import random
 
@@ -35,7 +36,7 @@ clock = pygame.time.Clock()
 
 #MUSIC
 
-pygame.mixer.music.load('Here Comes a Thought - Steven Universe Karaoke [Official Instrumental](MP3_160K).mp3')
+pygame.mixer.music.load('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3')
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)  # Play the music indefinitely
 mute = False
@@ -46,8 +47,8 @@ mute = False
 game = Game_info()
 centipedes = Enemy(screen_width, screen_height, game.lvl)
 
-cyberBug = car(14,20,350)
-bomb = Bombs(4, 20, 350)
+cyberBug = car(14, 20, 350, screen_width, screen_height)
+bomb = Bombs(4, 20, 350, screen_width, screen_height)
 fuel_icon = food(random.randint(5, 1000 - fuel_image.get_width() - 100),
                  random.randint(0, 550 - fuel_image.get_height() - 50), screen_width, screen_height)
 hp = health(20, 20, 140, 20, 140, 140, screen_width, screen_height)
@@ -92,8 +93,8 @@ def buttons():
 
 
     if keys[pygame.K_SPACE]:
-        cyberBug.max_vel = 20
-        cyberBug.rotation_vel = 10
+        cyberBug.max_vel = 17
+        cyberBug.rotation_vel = 9
         cyberBug.acceleration = 2
         bomb.x, bomb.y = cyberBug.x, cyberBug.y
     else:
@@ -146,45 +147,36 @@ def buttons():
 
 
 #====================Defining the collision control function================================================
-# def collision_cntrl():
 
-#     if cyberBug.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
-#         hp.fuel += 12.5
-#         game.progress += 1
-#         hp.score += 1
-#         fuel_icon.collided()
-#         #print("yay")
-
-#     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x, centipedes.y) is not None:
-#         hp.fuel -= 2.125
-#         rad = math.radians(cyberBug.angle)
-#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-#         #print("it worked")
-
-#     if cyberBug.hit(centipedes.enemy_mask(), abs(centipedes.x2 - centipedes.x), centipedes.y) is not None:
-#         hp.fuel -= 2.125
-#         rad = math.radians(cyberBug.angle)
-#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-#         print("it worked")
-
-#     if cyberBug.hit(centipedes.enemy_mask(), centipedes.x2, centipedes.y) is not None:
-#         hp.fuel -= 2.125
-#         rad = math.radians(cyberBug.angle)
-#         cyberBug.vel = -((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** (1 / 2)
-#         print("it worked")
+# At the top of main.py, add a cooldown timer
+collision_cooldown = 0
+COLLISION_COOLDOWN_MS = 800  # ms between fuel drain hits
 
 def collision_cntrl():
+    global collision_cooldown
+
     if cyberBug.hit(fuel_icon.col(), fuel_icon.x, fuel_icon.y) is not None:
         hp.fuel += 12.5
         game.progress += 1
         hp.score += 1
         fuel_icon.collided()
 
+    now = pygame.time.get_ticks()
+
     for bug in centipedes.bugs:
-        if cyberBug.hit(centipedes.enemy_mask(), bug['x'], bug['y']) is not None:
-            hp.fuel -= 2.125
-            rad = math.radians(cyberBug.angle)
-            cyberBug.vel = -(((8 * math.sin(rad)) ** 2 + (8 * math.cos(rad)) ** 2) ** 0.5)
+        mask = centipedes.get_bug_mask(bug)
+        if cyberBug.hit(mask, bug['x'], bug['y']) is not None:
+            if now > collision_cooldown:
+                hp.fuel -= 2.125
+                collision_cooldown = now + COLLISION_COOLDOWN_MS
+
+                # Give car the bug's speed in the bug's direction of travel
+                bug_direction = 1 if bug['vel'] > 0 else -1
+                cyberBug.vel = -bug_direction * min(abs(bug['vel']), 8)
+            break
+
+
+
 
 #====================Defining the main game loop================================================
 start_game = True
