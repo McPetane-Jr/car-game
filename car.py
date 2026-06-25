@@ -138,6 +138,8 @@ class Bombs(car):
         self.exp_index = 0
         self.count = 0
 
+        self.small_bomb = pygame.transform.scale(self.Bomb, (20, 20))
+
     def detonate(self):
     
         if not self.F_down and len(self.bombs) < 1:
@@ -153,9 +155,12 @@ class Bombs(car):
         self.exp_index = 0
         self.bombs.clear()
 
-    def draw(self, screen):
+    def draw(self, screen, screen_x, screen_y):
+
         
         if not self.bombs:   # "if the bombs list is empty exit func/methd"
+            
+            screen.blit(self.small_bomb, (screen_x, screen_y))  # sits just under the health bar
             return
         
         self.explode()

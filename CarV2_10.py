@@ -62,7 +62,7 @@ def animate():
     hp.draw(screen)
     centipedes.draw(screen)
     #game.power_up(screen)
-    bomb.draw(screen)
+    bomb.draw(screen, 20, 45)
     pygame.display.update()
 
 
