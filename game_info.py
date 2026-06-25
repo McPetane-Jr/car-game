@@ -1,3 +1,5 @@
+#Game info script:
+
 #====================Defining the Game_info class================================================
 #This class will keep track of the wins, losses and levels
 class Game_info:

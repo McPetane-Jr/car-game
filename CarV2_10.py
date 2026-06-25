@@ -1,15 +1,4 @@
-# import os.path
-#from cgitb import small
-# from itertools import count
-# from math import radians
-# from pickle import GLOBAL
-
-#from PIL.ImageChops import offset
-#from pygame.time import get_ticks
-#from urllib3.filepost import writer
-
-#import timer
-#Todo: re-enable powerups
+#Main script:
 
 
 
@@ -54,7 +43,7 @@ centipedes = Enemy(screen_width, screen_height)
 duration = True
 game = Game_info()
 
-kar = car(4,20,350)
+kar = car(14,20,350)
 bomb = Bombs(4, 20, 350)
 
 

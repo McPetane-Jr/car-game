@@ -1,3 +1,4 @@
+#Entities script:
 import os.path
 import pygame
 import random
