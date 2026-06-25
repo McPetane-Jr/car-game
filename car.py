@@ -124,7 +124,9 @@ class Bombs(car):
                   pygame.image.load('images/props/E3.png'),
                   pygame.image.load('images/props/E4.png'),
     ]
+
     Bomb = pygame.image.load('images/props/Bomb.png')
+    
     def __init__(self, rotation_vel, x, y):
         super().__init__(rotation_vel, x, y)
 
