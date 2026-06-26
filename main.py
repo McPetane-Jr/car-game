@@ -149,8 +149,8 @@ def buttons():
 #====================Defining the collision control function================================================
 
 # At the top of main.py, add a cooldown timer
-collision_cooldown = 0
-COLLISION_COOLDOWN_MS = 800  # ms between fuel drain hits
+collision_cooldown = 0 
+COLLISION_COOLDOWN_MS = 400  # ms between fuel drain hits
 
 def collision_cntrl():
     global collision_cooldown
