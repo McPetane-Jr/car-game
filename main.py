@@ -12,7 +12,7 @@ from entities import food, health, Enemy, fuel_image
 from game_info import Game_info
 
 import pygame
-from utils import blit_rotate_center, scale_image
+from utils import blit_rotate_center, scale_image, resource_path
 
 pygame.init()
 
@@ -24,7 +24,7 @@ screen_width, screen_height = small_scrn_width, small_scrn_height
 
 #BACKGROUND
 
-bg = pygame.image.load("bg.jpg")
+bg = pygame.image.load(resource_path("bg.jpg"))
 
 
 
@@ -36,7 +36,7 @@ clock = pygame.time.Clock()
 
 #MUSIC
 
-pygame.mixer.music.load('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3')
+pygame.mixer.music.load((resource_path('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3')))
 pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)  # Play the music indefinitely
 mute = False

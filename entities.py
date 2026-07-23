@@ -3,11 +3,13 @@ import os.path
 import pygame
 import random
 
+from utils import resource_path
+
 pygame.init()
 
 
-fuel_image =pygame.image.load("larvae.png")
-fuel_sound = pygame.mixer.Sound("sound/effects/glassbell.wav")
+fuel_image =pygame.image.load(resource_path("larvae.png"))
+fuel_sound = pygame.mixer.Sound(resource_path("sound/effects/glassbell.wav"))
 
 class food():
     icon = fuel_image
@@ -127,7 +129,7 @@ class health():
 
 class Enemy:
     
-    enemies = [pygame.image.load('bug.png')]
+    enemies = [pygame.image.load(resource_path('bug.png'))]
     enemies_l = [pygame.transform.flip(enemies[0], False, True)]
     enemy_mask_fwd = pygame.mask.from_surface(enemies[0])  # pre-computed
     enemy_mask_bwd = pygame.mask.from_surface(enemies_l[0])

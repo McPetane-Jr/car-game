@@ -3,15 +3,15 @@
 
 import pygame
 import math
-from utils import blit_rotate_center, scale_image
+from utils import blit_rotate_center, resource_path, scale_image
 
 pygame.init()
 
 #=========Vehicle assets===================================================
-vehicle = pygame.image.load('images/car/LadyBugCar.png')
-Moving_vehicle = pygame.image.load('images/car/LadyBugCarMoving.png')
-Reversing_vehicle = pygame.image.load('images/car/LadyBugCarReversing.png')
-Shield = scale_image(pygame.image.load('images/props/Shild.png'), 1.5)
+vehicle = pygame.image.load((resource_path('images/car/LadyBugCar.png')))
+Moving_vehicle = pygame.image.load((resource_path('images/car/LadyBugCarMoving.png')))
+Reversing_vehicle = pygame.image.load((resource_path('images/car/LadyBugCarReversing.png')))
+Shield = scale_image(pygame.image.load((resource_path('images/props/Shield.png'))), 1.5)
 
 class car():
 
@@ -148,14 +148,14 @@ class car():
 
 
 class Bombs(car):
-    Explosions = [pygame.image.load('images/props/E00.png'),
-                  pygame.image.load('images/props/E11.png'),
-                  pygame.image.load('images/props/E2.png'),
-                  pygame.image.load('images/props/E3.png'),
-                  pygame.image.load('images/props/E4.png'),
+    Explosions = [pygame.image.load((resource_path('images/props/E00.png'))),
+                  pygame.image.load((resource_path('images/props/E11.png'))),
+                  pygame.image.load((resource_path('images/props/E2.png'))),
+                  pygame.image.load((resource_path('images/props/E3.png'))),
+                  pygame.image.load((resource_path('images/props/E4.png'))),
     ]
 
-    Bomb = pygame.image.load('images/props/Bomb.png')
+    Bomb = pygame.image.load((resource_path('images/props/Bomb.png')))
 
     def __init__(self, rotation_vel, x, y, screen_width, screen_height):
         super().__init__(rotation_vel, x, y, screen_width, screen_height)
