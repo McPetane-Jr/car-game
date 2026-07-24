@@ -13,6 +13,7 @@ Moving_vehicle = pygame.image.load((resource_path('images/car/LadyBugCarMoving.p
 Reversing_vehicle = pygame.image.load((resource_path('images/car/LadyBugCarReversing.png')))
 Shield = scale_image(pygame.image.load((resource_path('images/props/Shield.png'))), 1.5)
 
+
 class car():
 
     IMG_static = vehicle

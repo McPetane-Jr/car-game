@@ -3,7 +3,7 @@ import os.path
 import pygame
 import random
 
-from utils import resource_path
+from utils import resource_path, save_path
 
 pygame.init()
 
@@ -74,7 +74,7 @@ class health():
         self.scrn_height = screen_height
 
     def save_score(self):
-        file_path = "images/high score/currentHighScore.txt"
+        file_path = save_path("currentHighScore.txt")
         if os.path.exists(file_path):
             with open(file_path, "r") as file:
                 self.contents= file.read()

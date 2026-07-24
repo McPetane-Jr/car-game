@@ -1,5 +1,5 @@
 #Main script:
-
+import sys
 
 
 
@@ -21,6 +21,9 @@ pygame.init()
 small_scrn_width, small_scrn_height = 1280 * 0.9, 720 * 0.9
 screen_width, screen_height = small_scrn_width, small_scrn_height
 
+# icon
+icon_img = pygame.image.load(resource_path("icon.png"))
+pygame.display.set_icon(icon_img)
 
 #BACKGROUND
 
@@ -191,7 +194,8 @@ while start_game:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exit("I didn't want you playin' me anyway!")
+            print("Game closed by user.")
+            sys.exit()
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_m:        # fixed: event-based, fires once per press

@@ -33,7 +33,28 @@ def resource_path(relative_path):
 
             Here's how we join them:            
             '''
-        return os.path.join(base_path, relative_path)
+    return os.path.join(base_path, relative_path)
+
+
+def save_path(relative_path):
+
+    if getattr(sys, 'frozen', False): 
+        '''
+        getattr() is a built-in Python function that returns the value of the named attribute of an object.
+        In simple terms, it checks if the script is running in a "frozen" state, which means it's packaged as an executable (like with PyInstaller).
+        It takes in two arguments: the object to check (in this case, sys) and the name of the attribute to look for ('frozen').
+        "False" is the default value to return if the attribute doesn't exist.
+        '''
+
+        base_path = os.path.dirname(sys.executable)  # Get the directory of the executable
+
+    else:
+
+        base_path = os.path.abspath(".")  # Get the current working directory
+
+    return os.path.join(base_path, relative_path)  # Join the base path with the relative path to get the full path
+
+
 
 
 def scale_image(img, factor):
@@ -53,5 +74,6 @@ def blit_rotate_center(screen, image, top_left, angle):
         with PyInstaller, the relative paths may not work as expected. This function will help locate the resource files 
          correctly whether the script is run directly or packaged.
 
-    2.      
+    2. I'm adding a save_path() helper function to write the high score text file where it'll exist even after the game is closed. 
+        This location need to be a place where the exe is allowed to write files. The current working directory is a good choice for this.
 '''
