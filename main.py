@@ -174,11 +174,38 @@ def collision_cntrl():
 
 def main_menu():
     """
-    Placeholder for the main menu screen.
-    Should eventually return a string like "play", "quit", "settings"
-    based on what the user clicks/selects.
+    Shows the menu background and waits for a left-click to start.
+    Returns "play" when the player clicks, or exits on window close.
     """
-    pass
+    prompt_visible = True
+    blink_timer = 0
+
+    menu_running = True
+    while menu_running:
+        clock.tick(32)
+        blink_timer += 1
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                print("Game closed by user.")
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                menu_running = False
+
+        screen.blit(menu_bg, (0, 0))
+
+        title_surf = menu_font_title.render("CYBERBUG", True, (255, 255, 255))
+        screen.blit(title_surf, (screen_width / 2 - title_surf.get_width() / 2, 80))
+
+        # Simple blink effect so the prompt doesn't just sit there static
+        if blink_timer % 32 < 20:
+            prompt_surf = menu_font_prompt.render("Click to Start", True, (255, 255, 255))
+            screen.blit(prompt_surf, (screen_width / 2 - prompt_surf.get_width() / 2, screen_height - 100))
+
+        pygame.display.update()
+
+    return "play"
 
 
 def pause_menu():
