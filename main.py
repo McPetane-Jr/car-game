@@ -195,13 +195,13 @@ def main_menu():
 
         screen.blit(menu_bg, (0, 0))
 
-        title_surf = menu_font_title.render("CYBERBUG", True, (255, 255, 255))
-        screen.blit(title_surf, (screen_width / 2 - title_surf.get_width() / 2, 80))
+        title_surf = menu_font_title.render("CYBERBUG", True, "red")
+        screen.blit(title_surf, (screen_width / 2 - title_surf.get_width() / 2, screen_height * 0.85))
 
         # Simple blink effect so the prompt doesn't just sit there static
         if blink_timer % 32 < 20:
             prompt_surf = menu_font_prompt.render("Click to Start", True, (255, 255, 255))
-            screen.blit(prompt_surf, (screen_width / 2 - prompt_surf.get_width() / 2, screen_height - 100))
+            screen.blit(prompt_surf, (screen_width / 2 - prompt_surf.get_width() / 2, screen_height*0.8))
 
         pygame.display.update()
 
