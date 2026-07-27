@@ -45,7 +45,9 @@ def scale_menu_background(raw_menu_bg):
     y_offset = (new_h - screen_height) // 2
     return scaled_menu_bg.subsurface((x_offset, y_offset, screen_width, screen_height)).copy()
 
-  
+menu_bg = scale_menu_background(pygame.image.load(resource_path("ChatGPT cyberbug Image.png")))
+menu_font_title = pygame.font.SysFont("arial", 60, bold=True)
+menu_font_prompt = pygame.font.SysFont("arial", 28)
 
 # Screen + clock
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -248,15 +250,15 @@ def play():
 
 
 # ---- Entry point ----
-# Once main_menu() is built, this becomes something like:
-#
-# state = "menu"
-# while state != "quit":
-#     if state == "menu":
-#         state = main_menu()
-#     elif state == "play":
-#         play()
-#         state = "menu"
-#
-# For now, just start the game directly:
-play()
+
+def run_game():
+    state = "menu"
+    while state != "quit":
+        if state == "menu":
+            state = main_menu()
+        elif state == "play":
+            play()
+            state = "menu"
+
+
+run_game()
