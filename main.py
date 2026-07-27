@@ -1,87 +1,70 @@
-#Main script:
+# Main script
 import sys
-
-
-
 import math
 import random
 
+import pygame
 
 from car import car, Bombs
 from entities import food, health, Enemy, fuel_image
 from game_info import Game_info
-
-import pygame
 from utils import blit_rotate_center, scale_image, resource_path
 
 pygame.init()
 
-#Defining the screen width and height
+# ---- Things that should only ever happen ONCE ----
 
+# Screen size
 small_scrn_width, small_scrn_height = 1280 * 0.9, 720 * 0.9
 screen_width, screen_height = small_scrn_width, small_scrn_height
 
-# icon
+# Icon
 icon_img = pygame.image.load(resource_path("icon.png"))
 pygame.display.set_icon(icon_img)
 
-#BACKGROUND
-
+# Background
 bg = pygame.image.load(resource_path("bg.jpg"))
 
-
-
-#Setting up the screen and clock
+# Screen + clock
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
 
-
-#MUSIC
-
-pygame.mixer.music.load((resource_path('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3')))
+# Music (loaded once, played/paused as needed)
+pygame.mixer.music.load(resource_path(
+    'Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3'
+))
 pygame.mixer.music.set_volume(0.5)
-pygame.mixer.music.play(-1)  # Play the music indefinitely
+
+# ---- Globals that get created/reset each time play() runs ----
 mute = False
+collision_cooldown = 0
+COLLISION_COOLDOWN_MS = 400  # ms between fuel drain hits
 
-     
+game = None
+centipedes = None
+cyberBug = None
+bomb = None
+fuel_icon = None
+hp = None
+keys = None
 
-#Defining the game objects
-game = Game_info()
-centipedes = Enemy(screen_width, screen_height, game.lvl)
-
-cyberBug = car(14, 20, 350, screen_width, screen_height)
-bomb = Bombs(4, 20, 350, screen_width, screen_height)
-fuel_icon = food(random.randint(5, 1000 - fuel_image.get_width() - 100),
-                 random.randint(0, 550 - fuel_image.get_height() - 50), screen_width, screen_height)
-hp = health(20, 20, 140, 20, 140, 140, screen_width, screen_height)
-
-
-
-#Defining the animate function:
 
 def animate():
-    screen.blit(bg, (0,0))
+    screen.blit(bg, (0, 0))
     fuel_icon.draw(screen)
     cyberBug.draw(screen)
     hp.draw(screen)
     centipedes.draw(screen)
-    #game.power_up(screen)
     bomb.draw(screen, 20, 45)
     pygame.display.update()
 
 
-
-
-
-#Defining the buttons function:
-
 def buttons():
-    
     moving = False
 
     if keys[pygame.K_v]:
-        cyberBug.shield_active = True     # V-> shield
+        cyberBug.shield_active = True     # V -> shield
 
     if keys[pygame.K_f]:
         bomb.detonate()
@@ -92,8 +75,6 @@ def buttons():
         if bomb.count > 0 and not bomb.exploded:
             bomb.solid = False
             bomb.exploded = True
-
-
 
     if keys[pygame.K_SPACE]:
         cyberBug.max_vel = 17
@@ -118,13 +99,11 @@ def buttons():
         cyberBug.reverse()
         bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
-    #if keys[pygame.K_d]:
     if keys[pygame.K_RIGHT]:
         cyberBug.rotation(right=True)
         cyberBug.rotation(left=False)
         bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
-    #if keys[pygame.K_a]:
     if keys[pygame.K_LEFT]:
         cyberBug.rotation(right=False)
         cyberBug.rotation(left=True)
@@ -137,23 +116,12 @@ def buttons():
         bomb.x, bomb.y = cyberBug.x, cyberBug.y
 
     if moving:
-
         if hp.fuel > 0:
             hp.fuel -= 0.247
 
     if hp.fuel <= 0:
         hp.empty(screen)
 
-    
-
-
-
-
-#====================Defining the collision control function================================================
-
-# At the top of main.py, add a cooldown timer
-collision_cooldown = 0 
-COLLISION_COOLDOWN_MS = 400  # ms between fuel drain hits
 
 def collision_cntrl():
     global collision_cooldown
@@ -173,54 +141,98 @@ def collision_cntrl():
                 hp.fuel -= 2.125
                 collision_cooldown = now + COLLISION_COOLDOWN_MS
 
-                # Give car the bug's speed in the bug's direction of travel
                 bug_direction = 1 if bug['vel'] > 0 else -1
                 cyberBug.vel = -bug_direction * min(abs(bug['vel']), 8)
             break
 
 
+def main_menu():
+    """
+    Placeholder for the main menu screen.
+    Should eventually return a string like "play", "quit", "settings"
+    based on what the user clicks/selects.
+    """
+    pass
 
 
-#====================Defining the main game loop================================================
-start_game = True
+def pause_menu():
+    """
+    Placeholder for a pause overlay, triggered by e.g. ESC during play().
+    """
+    pass
 
 
-
-while start_game:
-    clock.tick(32)
-
-
-
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            print("Game closed by user.")
-            sys.exit()
-
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_m:        # fixed: event-based, fires once per press
-                mute = not mute
-                if mute:
-                    pygame.mixer.music.pause()
-                else:
-                    pygame.mixer.music.unpause()
-
-    keys = pygame.key.get_pressed()
+def game_over_screen():
+    """
+    Placeholder for a game-over / score screen shown when hp.fuel
+    runs out permanently, or the player dies another way.
+    Should eventually return "retry", "menu", or "quit".
+    """
+    pass
 
 
-    buttons()
-    collision_cntrl()
-    hp.save_score()
+def play():
+    global mute, collision_cooldown, keys
+    global game, centipedes, cyberBug, bomb, fuel_icon, hp
+
+    # Fresh game objects every time play() is called (new run / restart)
+    game = Game_info()
+    centipedes = Enemy(screen_width, screen_height, game.lvl)
+    cyberBug = car(14, 20, 350, screen_width, screen_height)
+    bomb = Bombs(4, 20, 350, screen_width, screen_height)
+    fuel_icon = food(
+        random.randint(5, 1000 - fuel_image.get_width() - 100),
+        random.randint(0, 550 - fuel_image.get_height() - 50),
+        screen_width, screen_height
+    )
+    hp = health(20, 20, 140, 20, 140, 140, screen_width, screen_height)
+
+    collision_cooldown = 0
+    pygame.mixer.music.play(-1)
+
+    start_game = True
+    while start_game:
+        clock.tick(32)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                print("Game closed by user.")
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_m:
+                    mute = not mute
+                    if mute:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
+
+        keys = pygame.key.get_pressed()
+
+        buttons()
+        collision_cntrl()
+        hp.save_score()
+
+        if game.progress // 5 == game.lvl and game.progress > 0:
+            game.next_lvl()
+            centipedes.level_up(game.lvl)
+
+        if game.lvl > 1:
+            centipedes.enemies_available = True
+
+        animate()
 
 
-    if game.progress//5  == game.lvl and game.progress > 0:
-        game.next_lvl()
-        centipedes.level_up(game.lvl)
-
-    if game.lvl > 1:
-        centipedes.enemies_available = True
-
-
-    animate()
-
-
+# ---- Entry point ----
+# Once main_menu() is built, this becomes something like:
+#
+# state = "menu"
+# while state != "quit":
+#     if state == "menu":
+#         state = main_menu()
+#     elif state == "play":
+#         play()
+#         state = "menu"
+#
+# For now, just start the game directly:
+play()
