@@ -25,6 +25,28 @@ pygame.display.set_icon(icon_img)
 # Background
 bg = pygame.image.load(resource_path("bg.jpg"))
 
+# Main menu background
+def scale_menu_background(raw_menu_bg):
+    """ 
+    Scale the raw menu background image to fit the screen size while maintaining aspect ratio.
+
+    """
+
+    img_w, img_h = raw_menu_bg.get_size()
+
+    scale = max(screen_width / img_w, screen_height / img_h) #
+
+    new_w, new_h = round(img_w * scale), round(img_h * scale)
+
+    scaled_menu_bg = pygame.transform.scale(raw_menu_bg, (new_w, new_h))
+
+    # Crop centered to exactly screen_width x screen_height
+    x_offset = (new_w - screen_width) // 2
+    y_offset = (new_h - screen_height) // 2
+    return scaled_menu_bg.subsurface((x_offset, y_offset, screen_width, screen_height)).copy()
+
+  
+
 # Screen + clock
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
@@ -49,6 +71,8 @@ fuel_icon = None
 hp = None
 keys = None
 
+
+    
 
 def animate():
     screen.blit(bg, (0, 0))
