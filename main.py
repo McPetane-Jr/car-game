@@ -88,12 +88,24 @@ keys = None
     
 
 def animate():
-    screen.blit(bg, (0, 0))
-    fuel_icon.draw(screen)
-    cyberBug.draw(screen)
-    hp.draw(screen)
-    centipedes.draw(screen)
-    bomb.draw(screen, 20, 45)
+    global shake_duration
+    frame_surface.fill(bg, (0, 0))  # Clear the frame surface with transparency
+    fuel_icon.draw(frame_surface)
+    cyberBug.draw(frame_surface)
+    hp.draw(frame_surface)
+    centipedes.draw(frame_surface)
+    bomb.draw(frame_surface, 20, 45)
+
+    offset_x, offset_y = 0, 0 # No shake by default
+
+    if shake_duration > 0:
+        offset_x = random.randint(-wiggle_magnitude, wiggle_magnitude)
+        offset_y = random.randint(-wiggle_magnitude, wiggle_magnitude)
+        shake_duration -= 1 # decr
+
+    screen.blit(0, 0, 0) # Covers any gap left by the bg image when shaking
+    screen.blit(frame_surface, (offset_x, offset_y))
+    
     pygame.display.update()
 
 
