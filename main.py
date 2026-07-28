@@ -54,6 +54,10 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
 
+# Invisible surface: for drawing entities so the bg is the only thing that wiggles
+frame_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+
+
 # Music (loaded once, played/paused as needed)
 pygame.mixer.music.load(resource_path(
     'Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3'

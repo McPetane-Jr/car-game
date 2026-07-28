@@ -5,7 +5,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('bg.jpg', '.'), ('larvae.png', '.'), ('bug.png', '.'), ('icon.png', '.'), ('images', 'images'), ('sound', 'sound'), ('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3', '.')],
+    datas=[('bg.jpg', '.'), ('larvae.png', '.'), ('bug.png', '.'), ('icon.png', '.'), ('images', 'images'), ('ChatGPT cyberbug Image.png', '.'), ('sound', 'sound'), ('Here Comes a Thought - Steven Universe karaoke [Official Instrumental](MP3_160K).mp3', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
