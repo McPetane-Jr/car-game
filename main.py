@@ -56,6 +56,13 @@ clock = pygame.time.Clock()
 
 # Invisible surface: for drawing entities so the bg is the only thing that wiggles
 frame_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+wiggle_magnitude = 0
+shake_duration = 0
+
+def shake_screen(magnitude, duration):
+    global wiggle_magnitude, shake_duration
+    wiggle_magnitude = magnitude
+    shake_duration = duration
 
 
 # Music (loaded once, played/paused as needed)
