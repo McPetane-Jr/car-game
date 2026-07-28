@@ -55,7 +55,7 @@ pygame.display.set_caption("CAR")
 clock = pygame.time.Clock()
 
 # Invisible surface: for drawing entities so the bg is the only thing that wiggles
-frame_surface = pygame.Surface((screen_width, screen_height), pygame.SRCALPHA)
+frame_surface = pygame.Surface((screen_width, screen_height))
 wiggle_magnitude = 0
 shake_duration = 0
 
@@ -89,7 +89,7 @@ keys = None
 
 def animate():
     global shake_duration
-    frame_surface.fill(bg, (0, 0))  # Clear the frame surface with transparency
+    frame_surface.blit(bg, (0, 0))  # Clear the frame surface with transparency
     fuel_icon.draw(frame_surface)
     cyberBug.draw(frame_surface)
     hp.draw(frame_surface)
@@ -103,9 +103,9 @@ def animate():
         offset_y = random.randint(-wiggle_magnitude, wiggle_magnitude)
         shake_duration -= 1 # decr
 
-    screen.blit(0, 0, 0) # Covers any gap left by the bg image when shaking
+    screen.fill((0, 0, 0)) # Covers any gap left by the bg image when shaking
     screen.blit(frame_surface, (offset_x, offset_y))
-    
+
     pygame.display.update()
 
 
@@ -124,6 +124,7 @@ def buttons():
         if bomb.count > 0 and not bomb.exploded:
             bomb.solid = False
             bomb.exploded = True
+            shake_screen(12, 12)  # Shake the screen when the bomb explodes
 
     if keys[pygame.K_SPACE]:
         cyberBug.max_vel = 17
@@ -189,6 +190,7 @@ def collision_cntrl():
             if now > collision_cooldown:
                 hp.fuel -= 2.125
                 collision_cooldown = now + COLLISION_COOLDOWN_MS
+                shake_screen(6, 6)  # Shake the screen when a collision occurs
 
                 bug_direction = 1 if bug['vel'] > 0 else -1
                 cyberBug.vel = -bug_direction * min(abs(bug['vel']), 8)
